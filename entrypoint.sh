@@ -3,7 +3,7 @@ set -e
 
 source /gh-toolkit/shell.sh
 
-gh_validate_env "GITHUB_TOKEN" "SET GITHUB_TOKEN ENV Variable"
+#gh_validate_env "GITHUB_TOKEN" "SET GITHUB_TOKEN ENV Variable"
 gh_validate_input "SAVE_PATH" "SET SAVE_PATH Variable"
 
 gitconfig "WordPress Bot" "githubactionbot+wp@gmail.com"
@@ -40,8 +40,9 @@ gh_log_group_start "📝 Generating POT File"
 wp i18n make-pot . "$SAVE_FULL_PATH" --slug="$ITEM_SLUG" --package-name="$PACKAGE_NAME" --headers="$HEADERS" --domain="$DOMAIN" --allow-root
 gh_log_group_end
 
+
 gh_log
-if [ "$(git status --porcelain)" != "" ]; then
+if [ "$(git status --porcelain)" != "" ] && [ $GITHUB_TOKEN ]; then
   gh_log_group_start "👌 Pushing To Github"
   git add "$SAVE_FULL_PATH"
   git commit -m "💬 POT File Regenerated"
